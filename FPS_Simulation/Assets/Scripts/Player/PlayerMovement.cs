@@ -174,10 +174,10 @@ namespace Player
                     float slopeAngle = Vector3.Angle(Vector3.up, m_slopeHit.normal);
                     float slopeAngleIncrease = 1 + (slopeAngle / 90f);
                     
-                    time += 2.5f * Time.deltaTime * m_speedIncreaseMultiplier * m_slopeIncreaseMultiplier * slopeAngleIncrease;
+                    time += Time.deltaTime * m_speedIncreaseMultiplier * m_slopeIncreaseMultiplier * slopeAngleIncrease;
                 }
                 else {
-                    time += 2.5f * Time.deltaTime * m_speedIncreaseMultiplier;
+                    time += Time.deltaTime * m_speedIncreaseMultiplier;
                 }
 
                 yield return null;
