@@ -1,4 +1,5 @@
 using System;
+using System.Collections;
 using UnityEngine;
 
 namespace Player
@@ -9,12 +10,17 @@ namespace Player
         [SerializeField] private float m_MoveSpeed;
         [SerializeField] private float m_WalkSpeed;
         [SerializeField] private float m_SprintSpeed;
+        [SerializeField] private float m_SlideSpeed;
+        [SerializeField] private float m_desiredMoveSpeed;
+        [SerializeField] private float m_lastDesiredMoveSpeed;
+        [SerializeField] private float m_speedIncreaseMultiplier;
+        [SerializeField] private float m_slopeIncreaseMultiplier;
         [SerializeField] private float m_groundDrag;
 
         [Header("Ground Check")] 
         [SerializeField] private float m_playerHeight;
         [SerializeField] private LayerMask m_whatIsGround;
-        [SerializeField] private bool m_grounded;
+        [SerializeField] public bool m_grounded;
 
         [Header("Player Keybinds")] 
         [SerializeField] private KeyCode m_jumpKey = KeyCode.Space;
@@ -31,6 +37,7 @@ namespace Player
         [SerializeField] private float m_CrouchSpeed;
         [SerializeField] private float m_crouchYScale;
         [SerializeField] private float m_startYScale;
+        [SerializeField] public bool m_sliding;
         
         [Header("Slope Settings")] 
         [SerializeField] private float m_maxSlopeAngle;
@@ -46,7 +53,7 @@ namespace Player
 
         [Header("Player States")]
         public MovementStates m_State;
-        public enum MovementStates { Walking, Sprinting, Crouching, Air }
+        public enum MovementStates { Walking, Sprinting, Crouching, Sliding, Air }
 
         private void Start()
         {
@@ -110,25 +117,73 @@ namespace Player
 
         private void StateHandler()
         {
+            //Method - Sliding
+            if (m_sliding) {
+                m_State = MovementStates.Sliding;
+
+                if (OnSlope() && m_RB.velocity.y < 0.1f) {
+                    m_desiredMoveSpeed = m_SlideSpeed;
+                }
+                else {
+                    m_desiredMoveSpeed = m_SprintSpeed;
+                }
+            }
             //Mode - Crouching
-            if (Input.GetKey(m_crouchKey) && m_grounded) {
+            else if (Input.GetKey(m_crouchKey)) {
                 m_State = MovementStates.Crouching;
-                m_MoveSpeed = m_CrouchSpeed;
+                m_desiredMoveSpeed = m_CrouchSpeed;
             }
             //Mode - Sprinting
             else if (m_grounded && Input.GetKey(m_sprintKey)) {
                 m_State = MovementStates.Sprinting;
-                m_MoveSpeed = m_SprintSpeed;
+                m_desiredMoveSpeed = m_SprintSpeed;
             }
             //Mode - Walking
             else if (m_grounded) {
                 m_State = MovementStates.Walking;
-                m_MoveSpeed = m_WalkSpeed;
+                m_desiredMoveSpeed = m_WalkSpeed;
             }
             //Mode - Air
             else {
                 m_State = MovementStates.Air;
             }
+            
+            //Check if desiredMoveSpeed has changed drastically
+            if (Mathf.Abs(m_desiredMoveSpeed - m_lastDesiredMoveSpeed) > 4f && m_MoveSpeed != 0) {
+                StopAllCoroutines();
+                StartCoroutine(SmoothlyLerpMoveSpeed());
+            }
+            else {
+                m_MoveSpeed = m_desiredMoveSpeed;
+            }
+
+            m_lastDesiredMoveSpeed = m_desiredMoveSpeed;
+        }
+
+        private IEnumerator SmoothlyLerpMoveSpeed()
+        {
+            //Smoothly lerp Movement Speed to desire value
+            float time = 0;
+            float difference = Mathf.Abs(m_desiredMoveSpeed - m_MoveSpeed);
+            float startValue = m_MoveSpeed;
+
+            while (time < difference) {
+                m_MoveSpeed = Mathf.Lerp(startValue, m_desiredMoveSpeed, time / difference);
+
+                if (OnSlope()) {
+                    float slopeAngle = Vector3.Angle(Vector3.up, m_slopeHit.normal);
+                    float slopeAngleIncrease = 1 + (slopeAngle / 90f);
+                    
+                    time += 2.5f * Time.deltaTime * m_speedIncreaseMultiplier * m_slopeIncreaseMultiplier * slopeAngleIncrease;
+                }
+                else {
+                    time += 2.5f * Time.deltaTime * m_speedIncreaseMultiplier;
+                }
+
+                yield return null;
+            }
+
+            m_MoveSpeed = m_desiredMoveSpeed;
         }
 
         private void MovePlayer()
@@ -144,11 +199,9 @@ namespace Player
                     m_RB.AddForce(Vector3.down * 80f, ForceMode.Force);
                 }
             }
-            
             //On Ground
             if(m_grounded)
                 m_RB.AddForce(10f * m_MoveSpeed * m_moveDirection.normalized, ForceMode.Force);
-            
             //In Air
             else if(!m_grounded)
                 m_RB.AddForce(m_airMultiplier * m_MoveSpeed * 10f * m_moveDirection.normalized, ForceMode.Force);

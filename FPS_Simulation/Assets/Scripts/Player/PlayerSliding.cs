@@ -17,7 +17,6 @@ namespace Player
         [SerializeField] private float m_slideTimer;
         [SerializeField] private float m_slideYScale;
         [SerializeField] private float m_startYScale;
-        [SerializeField] private bool m_sliding;
 
         [Header("Player Keybinds")] 
         [SerializeField] private KeyCode m_slideKey = KeyCode.LeftControl;
@@ -40,26 +39,26 @@ namespace Player
             m_verticalInput = Input.GetAxisRaw("Vertical");
             
             //Start Sliding
-            if (Input.GetKeyDown(m_slideKey) && (m_horizontalInput != 0 || m_verticalInput != 0) && m_pm.m_State == PlayerMovement.MovementStates.Sprinting) {
+            if (Input.GetKeyDown(m_slideKey) && (m_horizontalInput != 0 || m_verticalInput != 0) && m_pm.m_grounded) {
                 StartSlide();
             }
             
             //Stop Sliding
-            if (Input.GetKeyUp(m_slideKey) && m_sliding) {
+            if (Input.GetKeyUp(m_slideKey) && m_pm.m_sliding) {
                 StopSlide();
             }
         }
 
         private void FixedUpdate()
         {
-            if (m_sliding) {
+            if (m_pm.m_sliding) {
                 SlidingMovement();
             }
         }
 
         private void StartSlide()
         {
-            m_sliding = true;
+            m_pm.m_sliding = true;
             
             m_PlayerObj.localScale = new Vector3(m_PlayerObj.localScale.x, m_slideYScale, m_PlayerObj.localScale.z);
             m_RB.AddForce(Vector3.down * 5f, ForceMode.Impulse);
@@ -89,7 +88,7 @@ namespace Player
 
         private void StopSlide()
         {
-            m_sliding = false;
+            m_pm.m_sliding = false;
             
             m_PlayerObj.localScale = new Vector3(m_PlayerObj.localScale.x, m_startYScale, m_PlayerObj.localScale.z);
         }
