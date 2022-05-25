@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="UTF-8"?>
+<?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ContentModelStore">
     <e p="C:\Users\hbahe\.Rider2019.2\system\extResources" t="IncludeRecursive" />
@@ -50,6 +50,10 @@
           </e>
           <e p="Shader" t="Include">
             <e p="OutlineNormalsCalculator.cs" t="Include" />
+          </e>
+          <e p="Weapons" t="Include">
+            <e p="GrapplingGun.cs" t="Include" />
+            <e p="RotateGrappleGun.cs" t="Include" />
           </e>
         </e>
         <e p="Shader" t="Include">
