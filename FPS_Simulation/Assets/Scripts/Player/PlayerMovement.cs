@@ -11,6 +11,10 @@ namespace Player
         [SerializeField] private float m_WalkSpeed;
         [SerializeField] private float m_SprintSpeed;
         [SerializeField] private float m_SlideSpeed;
+        [SerializeField] private float m_WallRunSpeed;
+        [SerializeField] private float m_ClimbSpeed;
+        
+        [Header("Speed Settings")] 
         [SerializeField] private float m_desiredMoveSpeed;
         [SerializeField] private float m_lastDesiredMoveSpeed;
         [SerializeField] private float m_speedIncreaseMultiplier;
@@ -20,12 +24,11 @@ namespace Player
         [Header("Ground Check")] 
         [SerializeField] private float m_playerHeight;
         [SerializeField] private LayerMask m_whatIsGround;
-        [SerializeField] public bool m_grounded;
 
         [Header("Player Keybinds")] 
         [SerializeField] private KeyCode m_jumpKey = KeyCode.Space;
         [SerializeField] private KeyCode m_sprintKey = KeyCode.LeftShift;
-        [SerializeField] private KeyCode m_crouchKey = KeyCode.LeftControl;
+        [SerializeField] private KeyCode m_crouchKey = KeyCode.C;
         
         [Header("Player Jump Settings")] 
         [SerializeField] private float m_jumpForce;
@@ -37,7 +40,7 @@ namespace Player
         [SerializeField] private float m_CrouchSpeed;
         [SerializeField] private float m_crouchYScale;
         [SerializeField] private float m_startYScale;
-        [SerializeField] public bool m_sliding;
+
         
         [Header("Slope Settings")] 
         [SerializeField] private float m_maxSlopeAngle;
@@ -50,14 +53,23 @@ namespace Player
         [SerializeField] private float m_verticalInput;
         [SerializeField] private Vector3 m_moveDirection;
         [SerializeField] private Rigidbody m_RB;
+        [SerializeField] private PlayerClimbing m_playerClimbing;
+        
+        [Header("Player Bools")]
+        [SerializeField] public bool m_sliding;
+        [SerializeField] public bool m_grounded;
+        [SerializeField] public bool m_crouching;
+        [SerializeField] public bool m_wallRunning;
+        [SerializeField] public bool m_climbing;
 
         [Header("Player States")]
         public MovementStates m_State;
-        public enum MovementStates { Walking, Sprinting, Crouching, Sliding, Air }
+        public enum MovementStates { Walking, Sprinting, Wallrunning, Climbing, Crouching, Sliding, Air }
 
         private void Start()
         {
             m_RB = GetComponent<Rigidbody>();
+            m_playerClimbing = GetComponent<PlayerClimbing>();
             m_RB.freezeRotation = true;
             m_Orientation = GetComponentInChildren<Transform>().gameObject.transform.Find("Orientation");
 
@@ -85,7 +97,7 @@ namespace Player
 
         private void FixedUpdate()
         {
-            MovePlayer();        
+            MovePlayer();
         }
 
         private void MyInput()
@@ -104,21 +116,36 @@ namespace Player
             }
             
             //Start Crouch
-            if (Input.GetKeyDown(m_crouchKey)) {
+            if (Input.GetKeyDown(m_crouchKey) && m_horizontalInput == 0 && m_verticalInput == 0) {
                 transform.localScale = new Vector3(transform.localScale.x, m_crouchYScale, transform.localScale.z);
                 m_RB.AddForce(Vector3.down * 5f, ForceMode.Impulse);
+                
+                m_crouching = true;
             }
             
             //Stop Crouch
             if (Input.GetKeyUp(m_crouchKey)) {
                 transform.localScale = new Vector3(transform.localScale.x, m_startYScale, transform.localScale.z);
+                
+                m_crouching = false;
             }
         }
 
         private void StateHandler()
         {
-            //Method - Sliding
-            if (m_sliding) {
+            //Mode - Climbing
+            if (m_climbing) {
+                m_State = MovementStates.Climbing;
+                m_desiredMoveSpeed = m_ClimbSpeed;
+            }
+            //Mode - Wallrunning
+            else if (m_wallRunning)
+            {
+                m_State = MovementStates.Wallrunning;
+                m_desiredMoveSpeed = m_WallRunSpeed;
+            }
+            //Mode - Sliding
+            else if (m_sliding) {
                 m_State = MovementStates.Sliding;
 
                 if (OnSlope() && m_RB.velocity.y < 0.1f) {
@@ -129,7 +156,7 @@ namespace Player
                 }
             }
             //Mode - Crouching
-            else if (Input.GetKey(m_crouchKey)) {
+            else if (m_crouching) {
                 m_State = MovementStates.Crouching;
                 m_desiredMoveSpeed = m_CrouchSpeed;
             }
@@ -188,6 +215,8 @@ namespace Player
 
         private void MovePlayer()
         {
+            if (m_playerClimbing.m_exitingWall) return;
+            
             //Calculate Movement Direction
             m_moveDirection = m_Orientation.forward * m_verticalInput + m_Orientation.right * m_horizontalInput;
             
@@ -206,7 +235,8 @@ namespace Player
             else if(!m_grounded)
                 m_RB.AddForce(m_airMultiplier * m_MoveSpeed * 10f * m_moveDirection.normalized, ForceMode.Force);
 
-            m_RB.useGravity = !OnSlope();
+            if(!m_wallRunning) 
+                m_RB.useGravity = !OnSlope();
         }
 
         private void SpeedControl()

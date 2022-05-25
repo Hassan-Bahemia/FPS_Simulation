@@ -10,6 +10,7 @@ namespace Player
         [SerializeField] private Transform m_PlayerObj;
         [SerializeField] private Rigidbody m_RB;
         [SerializeField] private PlayerMovement m_pm;
+        [SerializeField] private PlayerCam m_pc;
 
         [Header("Sliding Settings")] 
         [SerializeField] private float m_maxSlideTime;
@@ -29,6 +30,7 @@ namespace Player
             m_pm = GetComponent<PlayerMovement>();
             m_Orientation = GetComponentInChildren<Transform>().gameObject.transform.Find("Orientation");
             m_PlayerObj = GetComponentInChildren<Transform>().gameObject.transform.Find("PlayerObj");
+            m_pc = GameObject.Find("PlayerCam").GetComponent<PlayerCam>();
 
             m_startYScale = m_PlayerObj.localScale.y;
         }
@@ -64,6 +66,9 @@ namespace Player
             m_RB.AddForce(Vector3.down * 5f, ForceMode.Impulse);
 
             m_slideTimer = m_maxSlideTime;
+            
+            //Apply Camera Effects
+            m_pc.DoFov(90f);
         }
 
         private void SlidingMovement()
@@ -91,6 +96,9 @@ namespace Player
             m_pm.m_sliding = false;
             
             m_PlayerObj.localScale = new Vector3(m_PlayerObj.localScale.x, m_startYScale, m_PlayerObj.localScale.z);
+            
+            //Apply Camera Effects
+            m_pc.DoFov(75f);
         }
     }
 }
