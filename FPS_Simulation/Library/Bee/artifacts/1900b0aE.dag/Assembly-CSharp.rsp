@@ -346,8 +346,12 @@
 "Assets/Scripts/Player/PlayerSliding.cs"
 "Assets/Scripts/Player/PlayerWallrunning.cs"
 "Assets/Scripts/Shader/OutlineNormalsCalculator.cs"
+"Assets/Scripts/Weapons/CustomBullet.cs"
 "Assets/Scripts/Weapons/GrapplingGun.cs"
+"Assets/Scripts/Weapons/Gun.cs"
 "Assets/Scripts/Weapons/RotateGrappleGun.cs"
+"Assets/Scripts/Weapons/WeaponStats.cs"
+"Assets/Scripts/Weapons/WeaponStatsContextMenu.cs"
 "Assets/TutorialInfo/Scripts/Readme.cs"
 -langversion:8.0
 

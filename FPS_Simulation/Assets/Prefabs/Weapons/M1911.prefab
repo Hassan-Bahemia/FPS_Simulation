@@ -373,6 +373,7 @@ GameObject:
   - component: {fileID: 3779849016291149405}
   - component: {fileID: 1273280426610692}
   - component: {fileID: 1273280426610691}
+  - component: {fileID: 1369518132}
   m_Layer: 0
   m_Name: M1911
   m_TagString: Untagged
@@ -522,6 +523,24 @@ MonoBehaviour:
   m_jointSpring: 6.5
   m_jointDamp: 7
   m_jointMassScale: 6.5
+--- !u!114 &1369518132
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3782770196447844771}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a675ccf7de12b6e4fb2f9802ad063afa, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_weaponStats: {fileID: 11400000, guid: 15eaf9f999a990c4f9c223dd00e10669, type: 2}
+  m_fpsCam: {fileID: 0}
+  m_shootingPoint: {fileID: 7938625250951229758}
+  m_reloadKey: 114
+  m_shootKey: 323
+  allowInvoke: 1
 --- !u!1 &3782796701984217903
 GameObject:
   m_ObjectHideFlags: 0
@@ -628,7 +647,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 5315377237857557759}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0.025, z: -0.154}
+  m_LocalPosition: {x: 0, y: 0.025, z: -0.175}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 3779849016291149405}

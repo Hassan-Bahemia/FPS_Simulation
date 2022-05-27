@@ -52,8 +52,12 @@
             <e p="OutlineNormalsCalculator.cs" t="Include" />
           </e>
           <e p="Weapons" t="Include">
+            <e p="CustomBullet.cs" t="Include" />
             <e p="GrapplingGun.cs" t="Include" />
+            <e p="Gun.cs" t="Include" />
             <e p="RotateGrappleGun.cs" t="Include" />
+            <e p="WeaponStats.cs" t="Include" />
+            <e p="WeaponStatsContextMenu.cs" t="Include" />
           </e>
         </e>
         <e p="Shader" t="Include">
