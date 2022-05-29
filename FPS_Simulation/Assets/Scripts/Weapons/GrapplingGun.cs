@@ -4,11 +4,9 @@ namespace Weapons
 {
     public class GrapplingGun : MonoBehaviour
     {
-        [SerializeField] private LineRenderer m_lr;
         [SerializeField] private Vector3 m_grapplePoint;
-        [SerializeField] private Vector3 m_currentGrapplePosition;
         [SerializeField] private LayerMask m_whatIsGrappleable;
-        [SerializeField] private Transform m_shootingPoint;
+        [SerializeField] public Transform m_shootingPoint;
         [SerializeField] private Transform m_cam;
         [SerializeField] private Transform m_player;
         [SerializeField] private float m_maxDistance;
@@ -19,11 +17,6 @@ namespace Weapons
         [SerializeField] private float m_jointDamp;
         [SerializeField] private float m_jointMassScale;
 
-        private void Awake()
-        {
-            m_lr = GetComponent<LineRenderer>();
-        }
-
         private void Update()
         {
             if (Input.GetMouseButtonDown(1)) {
@@ -32,11 +25,6 @@ namespace Weapons
             else if (Input.GetMouseButtonUp(1)) {
                 StopGrapple();
             }
-        }
-
-        private void LateUpdate()
-        {
-            DrawRope();
         }
 
         /// <Summary>
@@ -61,21 +49,7 @@ namespace Weapons
                 m_joint.spring = m_jointSpring;
                 m_joint.damper = m_jointDamp;
                 m_joint.massScale = m_jointMassScale;
-            
-                m_lr.positionCount = 2;
-                m_currentGrapplePosition = m_shootingPoint.position;
             }
-        }
-
-        void DrawRope()
-        {
-            //If not grappling, don't draw rope
-            if (!m_joint) return;
-
-            m_currentGrapplePosition = Vector3.Lerp(m_currentGrapplePosition, m_grapplePoint, Time.deltaTime * 8f);
-        
-            m_lr.SetPosition(0, m_shootingPoint.position);
-            m_lr.SetPosition(1, m_currentGrapplePosition);
         }
 
         /// <Summary>
@@ -83,7 +57,6 @@ namespace Weapons
         /// </Summary>
         void StopGrapple()
         {
-            m_lr.positionCount = 0;
             Destroy(m_joint);
         }
     

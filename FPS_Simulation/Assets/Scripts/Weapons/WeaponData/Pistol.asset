@@ -16,13 +16,14 @@ MonoBehaviour:
   m_weaponShootForce: 15
   m_weaponUpwardForce: 0
   m_timeBetweenShooting: 1
-  m_spread: 0
+  m_spreadX: 5
+  m_spreadY: 0
   m_reloadTime: 1.25
   m_timeBetweenShots: 0
   m_magazineSize: 15
-  m_bulletsPerTap: 1
-  m_bulletsLeft: 9
-  m_bulletShot: 1
+  m_bulletsPerTap: 5
+  m_bulletsLeft: 15
+  m_bulletShot: 5
   m_allowButtonHold: 0
   m_shooting: 0
   m_readyToShoot: 1

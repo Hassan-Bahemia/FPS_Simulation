@@ -5,16 +5,18 @@ namespace Player
 {
     public class PlayerCam : MonoBehaviour
     {
-        [Header("Mouse Settings")]
-        [SerializeField] private float m_sensX;
+        [Header("Mouse Settings")] [SerializeField]
+        private float m_sensX;
+
         [SerializeField] private float m_sensY;
-        
-        [Header("PlayerRefs")]
-        [SerializeField] private Transform m_Orientation;
+
+        [Header("PlayerRefs")] [SerializeField]
+        private Transform m_Orientation;
+
         [SerializeField] private Transform m_camHolder;
         [SerializeField] private float m_xRotation;
         [SerializeField] private float m_yRotation;
-        
+
         // Start is called before the first frame update
         void Start()
         {
@@ -32,7 +34,7 @@ namespace Player
             m_yRotation += mouseX;
             m_xRotation -= mouseY;
             m_xRotation = Mathf.Clamp(m_xRotation, -90f, 90f);
-            
+
             //Rotate Cam and Orientation
             m_camHolder.rotation = Quaternion.Euler(m_xRotation, m_yRotation, 0);
             m_Orientation.rotation = Quaternion.Euler(0, m_yRotation, 0);

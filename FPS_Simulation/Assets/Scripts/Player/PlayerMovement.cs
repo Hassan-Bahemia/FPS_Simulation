@@ -13,7 +13,7 @@ namespace Player
         [SerializeField] private float m_SlideSpeed;
         [SerializeField] private float m_WallRunSpeed;
         [SerializeField] private float m_ClimbSpeed;
-        
+
         [Header("Speed Settings")] 
         [SerializeField] private float m_desiredMoveSpeed;
         [SerializeField] private float m_lastDesiredMoveSpeed;
@@ -54,7 +54,7 @@ namespace Player
         [SerializeField] private Vector3 m_moveDirection;
         [SerializeField] private Rigidbody m_RB;
         [SerializeField] private PlayerClimbing m_playerClimbing;
-        
+
         [Header("Player Bools")]
         [SerializeField] public bool m_sliding;
         [SerializeField] public bool m_grounded;

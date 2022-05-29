@@ -75,8 +75,8 @@ namespace Weapons
             Vector3 directionWithoutSpread = targetPoint - m_shootingPoint.position;
             
             //Calculate Spread
-            float x = Random.Range(-m_weaponStats.m_spread, m_weaponStats.m_spread);
-            float y = Random.Range(-m_weaponStats.m_spread, m_weaponStats.m_spread);
+            float x = Random.Range(-m_weaponStats.m_spreadX, m_weaponStats.m_spreadX);
+            float y = Random.Range(-m_weaponStats.m_spreadY, m_weaponStats.m_spreadY);
             
             //Calculate new direction with spread
             Vector3 directionWithSpread = directionWithoutSpread + new Vector3(x, y, 0); //Just add spread to last direction

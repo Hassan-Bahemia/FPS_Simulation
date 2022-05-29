@@ -54,8 +54,10 @@
           <e p="Weapons" t="Include">
             <e p="CustomBullet.cs" t="Include" />
             <e p="GrapplingGun.cs" t="Include" />
+            <e p="GrapplingRope.cs" t="Include" />
             <e p="Gun.cs" t="Include" />
             <e p="RotateGrappleGun.cs" t="Include" />
+            <e p="Spring.cs" t="Include" />
             <e p="WeaponStats.cs" t="Include" />
             <e p="WeaponStatsContextMenu.cs" t="Include" />
           </e>

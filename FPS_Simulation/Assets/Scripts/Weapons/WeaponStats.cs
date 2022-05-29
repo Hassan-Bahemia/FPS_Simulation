@@ -13,7 +13,8 @@ namespace Weapons
         
         //Weapon Stats (Float)
         public float m_timeBetweenShooting;
-        public float m_spread;
+        public float m_spreadX;
+        public float m_spreadY;
         public float m_reloadTime;
         public float m_timeBetweenShots;
 
